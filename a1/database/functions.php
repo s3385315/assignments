@@ -12,19 +12,39 @@
         }
     }
 
+    // Get all regions from the database.
+    // Returns both the id and name for each region.
     function getAllRegions($dbh) {
         // Check if connection is open
         if (is_null($dbh))
             return null;
 
         // Prepare SQL statement to select all regions
-        $stmt = $dbh->prepare("SELECT region_name FROM region");
+        $stmt = $dbh->prepare("SELECT region_id, region_name FROM region");
 
         // Execute SQL statement
         $stmt->execute();
 
         // Return the results
         return $stmt->fetchAll();
+    }
+
+    // Get all grape varieties from the database.
+    function getAllGrapeVarieties($dbh) {
+        return $dbh->query('SELECT * FROM grape_variety ORDER BY variety_id');
+    }
+
+    // Get the min and max years from the wine table
+    function getWineYearBounds($dbh) {
+        // Prepare SQL statement
+        $sql = 'SELECT min(year) as min, max(year) as max FROM wine';
+
+        // Return the first rowset of the resulting PDOStatement
+        // from the query function. (Should only be one.)
+        // Returns null on error.
+        return (($result = $dbh->query($sql)))
+            ? $result->fetch(PDO::FETCH_ASSOC)
+            : null;
     }
 
     function getRegionIdFromName($dbh, $name) {

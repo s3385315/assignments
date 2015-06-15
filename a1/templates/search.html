@@ -2,9 +2,72 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>Search</title>
+    <!-- Include bootstrap.html -->
+    <link href="../static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="../static/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet"/>
+    <script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <header>
+
+    </header>
+    <main>
+        <form class="form-horizontal" id="searchForm" name="searchForm" action="answer.php" method="get">
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="wine">Wine Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="wine"
+                           id="wine" placeholder="Enter wine name" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="winery">Winery Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="winery"
+                           id="winery" placeholder="Enter winery name" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="region">Wine Region</label>
+                <div class="col-sm-6">
+                    <select name="region" id="region" class="form-control">
+                        <!-- $BeginBlock regionListOption -->
+                        <option value="${region_id}">${region_name}</option>
+                        <!-- $EndBlock regionListOption -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="grape_variety">Grape Variety</label>
+                <select name="grape_variety" id="grape_variety">
+                    <!-- $BeginBlock varietyListOption -->
+                    <option value="${variety_id}">${variety_name}</option>
+                    <!-- $EndBlock varietyListOption -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year</label>
+                <select name="year" id="year">
+                    <!-- $BeginBlock wineYearListOption -->
+                    <option value="${year}">${year}</option>
+                    <!-- $EndBlock wineYearListOption -->
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="reset" class="btn btn-default">Reset</button>
+        </form>
+    </main>
+    <footer>
+
+    </footer>
+
 
 </body>
 </html>

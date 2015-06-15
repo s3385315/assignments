@@ -1,6 +1,6 @@
 <?php
 /**
-* File MiniTemplator.class.php
+* File MiniTemplator.php
 * @package MiniTemplator
 */
 
