@@ -11,40 +11,40 @@
 </head>
 <body>
     <header>
-
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Winestore</a>
+                </div>
+            </div>
+        </nav>
     </header>
-    <main>
-        <form class="form-horizontal" id="searchForm" name="searchForm" action="answer.php" method="get">
+    <main class="container">
+        <form id="searchForm" name="searchForm" action="answer.php" method="get" role="form">
             <div class="form-group">
-                <label class="control-label col-sm-3" for="wine">Wine Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="wine"
-                           id="wine" placeholder="Enter wine name" />
-                </div>
+                <label for="wine">Wine Name</label>
+                <input type="text" class="form-control" name="wine"
+                       id="wine" placeholder="Enter wine name" />
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3" for="winery">Winery Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="winery"
-                           id="winery" placeholder="Enter winery name" />
-                </div>
+                <label for="winery">Winery Name</label>
+                <input type="text" class="form-control" name="winery"
+                       id="winery" placeholder="Enter winery name" />
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3" for="region">Wine Region</label>
-                <div class="col-sm-6">
-                    <select name="region" id="region" class="form-control">
-                        <!-- $BeginBlock regionListOption -->
-                        <option value="${region_id}">${region_name}</option>
-                        <!-- $EndBlock regionListOption -->
-                    </select>
-                </div>
+                <label for="region">Wine Region</label>
+                <select name="region" id="region" class="form-control">
+                    <!-- $BeginBlock regionListOption -->
+                    <option value="${region_id}">${region_name}</option>
+                    <!-- $EndBlock regionListOption -->
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="grape_variety">Grape Variety</label>
-                <select name="grape_variety" id="grape_variety">
+                <select name="grape_variety" id="grape_variety" class="form-control">
                     <!-- $BeginBlock varietyListOption -->
                     <option value="${variety_id}">${variety_name}</option>
                     <!-- $EndBlock varietyListOption -->
@@ -53,7 +53,7 @@
 
             <div class="form-group">
                 <label for="year">Year</label>
-                <select name="year" id="year">
+                <select name="year" id="year" class="form-control">
                     <!-- $BeginBlock wineYearListOption -->
                     <option value="${year}">${year}</option>
                     <!-- $EndBlock wineYearListOption -->
