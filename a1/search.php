@@ -2,6 +2,8 @@
     require_once('classes/MiniTemplator.php');
     require_once('database/functions.php');
 
+    session_start();
+
     function generateRegionList($t, $conn) {
         foreach(getAllRegions($conn) as $region) {
             $t->setVariable('region_id', $region['region_id']);

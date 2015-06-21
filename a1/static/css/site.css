@@ -1,0 +1,13 @@
+input.currency {
+    text-align: right;
+    padding-right: 15px;
+}
+
+.input-group .form-control {
+    float: none;
+}
+
+.input-group .input-buttons {
+    position: relative;
+    z-index: 3;
+}

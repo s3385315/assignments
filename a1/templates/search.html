@@ -2,12 +2,21 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Search</title>
-    <!-- Include bootstrap.html -->
+    <title>Search Winestore</title>
     <link href="../static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="../static/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet"/>
+    <link href="../static/css/site.css" type="text/css" rel="stylesheet"/>
+
     <script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/js/polyfiller.js"></script>
+    <script type="text/javascript">
+        webshims.setOptions('forms-ext', {
+            replaceUI: 'auto',
+            types: 'number'
+        });
+        webshims.polyfill('forms forms-ext');
+    </script>
 </head>
 <body>
     <header>
@@ -20,54 +29,95 @@
         </nav>
     </header>
     <main class="container">
-        <form id="searchForm" name="searchForm" action="answer.php" method="get" role="form">
-            <div class="form-group">
-                <label for="wine">Wine Name</label>
-                <input type="text" class="form-control" name="wine"
-                       id="wine" placeholder="Enter wine name" />
-            </div>
+        <div class="row">
+            <div class="col-md-6">
+                <form class="form-horizontal" id="searchForm" name="searchForm" action="answer.php" method="get" role="form">
+                    <fieldset>
+                        <legend>Search Winestore</legend>
+                        <div class="form-group">
+                            <label for="wine">Wine Name</label>
+                            <input type="text" class="form-control" name="wine"
+                                   id="wine" placeholder="Enter wine name" />
+                        </div>
 
-            <div class="form-group">
-                <label for="winery">Winery Name</label>
-                <input type="text" class="form-control" name="winery"
-                       id="winery" placeholder="Enter winery name" />
-            </div>
+                        <div class="form-group">
+                            <label for="winery">Winery Name</label>
+                            <input type="text" class="form-control" name="winery"
+                                   id="winery" placeholder="Enter winery name" />
+                        </div>
 
-            <div class="form-group">
-                <label for="region">Wine Region</label>
-                <select name="region" id="region" class="form-control">
-                    <!-- $BeginBlock regionListOption -->
-                    <option value="${region_id}">${region_name}</option>
-                    <!-- $EndBlock regionListOption -->
-                </select>
-            </div>
+                        <div class="form-group">
+                            <label for="region">Wine Region</label>
+                            <select name="region" id="region" class="form-control">
+                                <!-- $BeginBlock regionListOption -->
+                                <option value="" selected></option>
+                                <option value="${region_id}">${region_name}</option>
+                                <!-- $EndBlock regionListOption -->
+                            </select>
+                        </div>
 
-            <div class="form-group">
-                <label for="grape_variety">Grape Variety</label>
-                <select name="grape_variety" id="grape_variety" class="form-control">
-                    <!-- $BeginBlock varietyListOption -->
-                    <option value="${variety_id}">${variety_name}</option>
-                    <!-- $EndBlock varietyListOption -->
-                </select>
-            </div>
+                        <div class="form-group">
+                            <label for="grape_variety">Grape Variety</label>
+                            <select name="grape_variety" id="grape_variety" class="form-control">
+                                <!-- $BeginBlock varietyListOption -->
+                                <option value="${variety_id}">${variety_name}</option>
+                                <!-- $EndBlock varietyListOption -->
+                            </select>
+                        </div>
 
-            <div class="form-group">
-                <label for="year">Year</label>
-                <select name="year" id="year" class="form-control">
-                    <!-- $BeginBlock wineYearListOption -->
-                    <option value="${year}">${year}</option>
-                    <!-- $EndBlock wineYearListOption -->
-                </select>
-            </div>
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <select multiple name="year[]" id="year" class="form-control">
+                                <!-- $BeginBlock wineYearListOption -->
+                                <option value="${year}">${year}</option>
+                                <!-- $EndBlock wineYearListOption -->
+                            </select>
+                        </div>
 
-            <button type="submit" class="btn btn-default">Submit</button>
-            <button type="reset" class="btn btn-default">Reset</button>
-        </form>
+                        <div class="form-group">
+                            <label for="minStock">Minimum in Stock</label>
+                            <input class="form-control" type="number" name="minStock" id="minStock" value="1" min="1"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="minOrdered">Minimum Ordered</label>
+                            <input class="form-control" type="number" name="minOrdered" id="minOrdered" value="1" min="1"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="minPrice">Minimum Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        <input class="form-control currency" type="number" name="minPrice" id="minPrice"
+                                               step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" min="0" value="500"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="maxPrice">Maximum Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        <input class="form-control currency" type="number" name="maxPrice" id="maxPrice"
+                                               step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" min="0" value="500"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
     </main>
     <footer>
 
     </footer>
-
-
 </body>
 </html>
