@@ -1,0 +1,59 @@
+<script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#resultsTable').DataTable({
+			'searching': false
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	
+		// Automatically "enable" a search field when
+		// text is entered into it.
+		$("input[type='text']").on('input', function(e) {
+			var length = e.target.value.length;
+			var checkbox_id = "#" + e.target.name + "_enabled";
+			var checkbox = $(checkbox_id);
+			
+			if (length > 0) {
+				if (! $(checkbox).is(':checked')) {
+					checkbox.prop('checked', true);
+				}
+			} else {
+				checkbox.prop('checked', false);
+			}
+		});
+
+		$("input[type='number']").on('input', function(e) {
+            var checkbox_id = "#" + e.target.name + "_enabled";
+            var checkbox = $(checkbox_id);
+
+            if (e.target.value == 0) {
+                checkbox.prop('checked', false);
+            }
+            else if (isNaN(e.target.value)) {
+                checkbox.prop('checked', false);
+            }
+            else {
+                checkbox.prop('checked', true);
+            }
+
+        });
+
+        $("select").on('change', function(e) {
+            var checkbox_id = "#" + e.target.name + "_enabled";
+            var checkbox = $(checkbox_id);
+
+            if (e.target.value == "") {
+                checkbox.prop('checked', false);
+            }
+            else {
+                checkbox.prop('checked', true);
+            }
+        })
+	});
+</script>

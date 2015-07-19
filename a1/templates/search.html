@@ -1,123 +1,171 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Search Winestore</title>
-    <link href="../static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-    <link href="../static/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet"/>
-    <link href="../static/css/site.css" type="text/css" rel="stylesheet"/>
+{% macro input(name, value, type, classes, placeholder) %}
+    <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ name }}" value="{{ value|e }}" placeholder="{{ placeholder }}"/>
+{% endmacro %}
 
-    <script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../static/js/polyfiller.js"></script>
-    <script type="text/javascript">
-        webshims.setOptions('forms-ext', {
-            replaceUI: 'auto',
-            types: 'number'
-        });
-        webshims.polyfill('forms forms-ext');
-    </script>
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Winestore</a>
+{% macro error(err_key) %}
+    {% if err_key in errors|keys %}
+        <div class="error">
+            <ul>
+                {% for err_msg in errors[err_key] %}
+                    <li>{{ err_msg }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as forms %}
+
+{% extends "master.html" %}
+
+{% block content %}
+
+<form class="form-horizontal" id="searchForm" name="searchForm" action="answer.php" method="get" role="form">
+	<fieldset>
+		<legend>Search Winestore</legend>
+
+		<div class="row">
+			<label for="wine">Wine Name</label>
+			<div class="one column">
+				<input type="checkbox" name="wine_enabled" id="wine_enabled" class="checkbox-pos-fix"/>
+			</div>
+			<div class="eleven columns">
+				<input type="text" class="u-full-width" name="wine"
+					   id="wine" placeholder="Enter wine name" />
+			</div>
+            {{ forms.error('wine') }}
+		</div>
+
+		<div class="row">
+			<label for="winery">Winery Name</label>
+			<div class="one column">
+				<input type="checkbox" name="winery_enabled" id="winery_enabled" class="checkbox-pos-fix"/>
+			</div>
+			<div class="eleven columns">
+				<input type="text" class="u-full-width" name="winery"
+					   id="winery" placeholder="Enter winery name" />
+			</div>
+            {{ forms.error('winery') }}
+		</div>
+
+		<div class="row">
+			<div class="six columns">
+				<label for="region">Wine Region</label>
+                <div class="one columns">
+				    <input type="checkbox" name="region_enabled" id="region_enabled" class="checkbox-pos-fix"/>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <main class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <form class="form-horizontal" id="searchForm" name="searchForm" action="answer.php" method="get" role="form">
-                    <fieldset>
-                        <legend>Search Winestore</legend>
-                        <div class="form-group">
-                            <label for="wine">Wine Name</label>
-                            <input type="text" class="form-control" name="wine"
-                                   id="wine" placeholder="Enter wine name" />
-                        </div>
+                <div class="eleven columns">
+				    <select name="region" id="region" class="u-full-width">
+                        <option value="" selected></option>
+                        {% for region in regions %}
+                        <option value="{{ region.id }}">{{ region.name }}</option>
+                        {% endfor %}
+				    </select>
+                </div>
+                {{ forms.error('region') }}
+			</div>
 
-                        <div class="form-group">
-                            <label for="winery">Winery Name</label>
-                            <input type="text" class="form-control" name="winery"
-                                   id="winery" placeholder="Enter winery name" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="region">Wine Region</label>
-                            <select name="region" id="region" class="form-control">
-                                <!-- $BeginBlock regionListOption -->
-                                <option value="" selected></option>
-                                <option value="${region_id}">${region_name}</option>
-                                <!-- $EndBlock regionListOption -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="grape_variety">Grape Variety</label>
-                            <select name="grape_variety" id="grape_variety" class="form-control">
-                                <!-- $BeginBlock varietyListOption -->
-                                <option value="${variety_id}">${variety_name}</option>
-                                <!-- $EndBlock varietyListOption -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="year">Year</label>
-                            <select multiple name="year[]" id="year" class="form-control">
-                                <!-- $BeginBlock wineYearListOption -->
-                                <option value="${year}">${year}</option>
-                                <!-- $EndBlock wineYearListOption -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="minStock">Minimum in Stock</label>
-                            <input class="form-control" type="number" name="minStock" id="minStock" value="1" min="1"/>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="minOrdered">Minimum Ordered</label>
-                            <input class="form-control" type="number" name="minOrdered" id="minOrdered" value="1" min="1"/>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="minPrice">Minimum Price</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input class="form-control currency" type="number" name="minPrice" id="minPrice"
-                                               step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" min="0" value="500"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="maxPrice">Maximum Price</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input class="form-control currency" type="number" name="maxPrice" id="maxPrice"
-                                               step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" min="0" value="500"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <button type="submit" class="btn btn-default">Submit</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                    </fieldset>
-                </form>
+            <div class="six columns">
+                <label for="grape_variety">Grape Variety</label>
+                <div class="one columns">
+                    <input type="checkbox" name="grape_variety_enabled" id="grape_variety_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <select name="grape_variety" id="grape_variety" class="u-full-width">
+                        <option value="" selected></option>
+                    {% for variety in grapes %}
+                        <option value="{{ variety.id }}">{{ variety.name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                {{ forms.error('grape_variety') }}
             </div>
         </div>
 
-    </main>
-    <footer>
+        <div class="row">
+            <div class="six columns">
+                <label for="min_year">Minimum Year</label>
+                <div class="one column">
+                    <input type="checkbox" name="min_year_enabled" id="min_year_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <select name="min_year" id="min_year" class="u-full-width">
+                        <option value="" selected></option>
+                        {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {{ forms.error('min_year') }}
+            </div>
+            <div class="six columns">
+                <label for="max_year">Maximum Year</label>
+                <div class="one column">
+                    <input type="checkbox" name="max_year_enabled" id="max_year_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <select name="max_year" id="max_year" class="u-full-width">
+                        <option value="" selected></option>
+                        {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {{ forms.error('max_year') }}
+            </div>
+		</div>
 
-    </footer>
-</body>
-</html>
+		<div class="row">
+			<div class="six columns">
+                <label for="min_stock">Minimum in Stock</label>
+                <div class="one column">
+                    <input type="checkbox" name="min_stock_enabled" id="min_stock_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <input class="u-full-width" type="number" name="min_stock" id="min_stock" value="0" min="0"/>
+                </div>
+                {{ forms.error('min_stock') }}
+			</div>
+
+			<div class="six columns">
+                <label for="min_ordered">Minimum Ordered</label>
+                <div class="one column">
+                    <input type="checkbox" name="min_ordered_enabled" id="min_ordered_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <input class="u-full-width" type="number" name="min_ordered" id="min_ordered" value="0" min="0"/>
+                </div>
+                {{ forms.error('min_ordered') }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="six columns">
+                <label for="min_price">Minimum Price</label>
+                <div class="one column">
+                    <input type="checkbox" name="min_price_enabled" id="min_price_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <input class="u-full-width" type="number" name="min_price" id="min_price"
+                           step="0.01" max="{{ max_price }}" value="{{ min_price }}"/>
+                </div>
+                {{ forms.error('min_price') }}
+			</div>
+			<div class="six columns">
+                <label for="max_price">Maximum Price</label>
+                <div class="one column">
+                    <input type="checkbox" name="max_price_enabled" id="max_price_enabled" class="checkbox-pos-fix"/>
+                </div>
+                <div class="eleven columns">
+                    <input class="u-full-width" type="number" name="max_price" id="max_price"
+                           step="0.01" min="{{ min_price }}" value="{{ max_price }}"/>
+                </div>
+                {{ forms.error('max_price') }}
+			</div>
+		</div>
+
+		<button type="submit" class="button-primary">Submit</button>
+		<button type="reset" class="btn btn-default">Reset</button>
+	</fieldset>
+</form>
+
+{% endblock %}

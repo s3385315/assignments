@@ -11,3 +11,60 @@ input.currency {
     position: relative;
     z-index: 3;
 }
+
+.column, .columns {
+    margin-left: 0;
+}
+
+.checkbox-pos-fix {
+	position: relative;
+	top: 7px;
+}
+
+div.error {
+    display: table;
+}
+
+div.error > ul > li {
+    color: red;
+    font-size: 0.8em;
+}/*
+
+nav.container {
+    max-width: none;
+    width: 100%;
+}
+
+nav {
+    background: #000;
+    margin-bottom: 5rem;
+    min-height: 100px;
+}
+
+.navbar-brand {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+    float: left;
+    font-size: 18px;
+    height: 50px;
+    line-height: 20px;
+    padding: 15px;
+}*/
+
+main {
+    background: #FFF;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.container {
+    padding: 10px;
+}
+
+legend {
+    font-size: 1.5em;
+}
+
+body {
+    background: #D1D1D1;
+}

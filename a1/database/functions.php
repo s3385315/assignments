@@ -1,6 +1,8 @@
 <?php
     require_once('db.php');
 
+    $pdo = connect_to_db();
+
     // Tries to connect to the DB and return a PDO instance.
     // Returns a PDOException on failure.
     function connect_to_db() {
@@ -14,13 +16,12 @@
 
     // Get all regions from the database.
     // Returns both the id and name for each region.
-    function getAllRegions($dbh) {
-        // Check if connection is open
-        if (is_null($dbh))
-            return null;
+    function getAllRegions() {
+        global $pdo;
 
         // Prepare SQL statement to select all regions
-        $stmt = $dbh->prepare("SELECT region_id, region_name FROM region");
+        $stmt = $pdo->prepare("SELECT region_id AS id, region_name AS name
+        					   FROM region");
 
         // Execute SQL statement
         $stmt->execute();
@@ -30,30 +31,65 @@
     }
 
     // Get all grape varieties from the database.
-    function getAllGrapeVarieties($dbh) {
-        return $dbh->query('SELECT * FROM grape_variety ORDER BY variety_id');
+    function getAllGrapeVarieties() {
+        global $pdo;
+
+        return $pdo->query('SELECT `variety_id` AS `id`, `variety` AS `name`
+							FROM grape_variety ORDER BY variety_id');
+    }
+
+    // Find lowest priced wine in stock
+    function getCheapestWine() {
+        global $pdo;
+
+        $sql = "SELECT MIN(i.`cost`) AS \"min\"
+                FROM `inventory` as i
+                WHERE i.`on_hand` > 0";
+
+        $statement = $pdo->prepare($sql);
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_NUM)[0];
+    }
+
+    // Find highest priced wine in stock
+    function getMostExpensiveWine() {
+        global $pdo;
+
+        $sql = "SELECT MAX(i.`cost`) AS \"max\"
+                    FROM `inventory` as i
+                    WHERE i.`on_hand` > 0";
+
+        $statement = $pdo->prepare($sql);
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_NUM)[0];
     }
 
     // Get the min and max years from the wine table
-    function getWineYearBounds($dbh) {
+    function getWineYearBounds() {
+        global $pdo;
+
         // Prepare SQL statement
         $sql = 'SELECT min(year) as min, max(year) as max FROM wine';
 
         // Return the first rowset of the resulting PDOStatement
         // from the query function. (Should only be one.)
         // Returns null on error.
-        return (($result = $dbh->query($sql)))
+        return (($result = $pdo->query($sql)))
             ? $result->fetch(PDO::FETCH_ASSOC)
             : null;
     }
 
-    function getRegionIdFromName($dbh, $name) {
+    function getRegionIdFromName($name) {
+        global $pdo;
+
         $sql = 'SELECT region_id
             FROM region
             WHERE region_name = ?';
 
         // Prepare SQL statement
-        $stmt = $dbh->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
         // Bind region name variable to SQL statement
         $stmt->bindValue(1, $name);
@@ -68,13 +104,11 @@
         return ($result) ? $result['region_id'] : null;
     }
 
-    function getAllWineryInRegionByName($dbh, $name) {
-        // Check if connection is open
-        if (is_null($dbh))
-            return null;
+    function getAllWineryInRegionByName($name) {
+        global $pdo;
 
         // Find region id or return null if a match isn't found
-        if (is_null(($region_id = getRegionIdFromName($dbh, $name)))) {
+        if (is_null(($region_id = getRegionIdFromName($name)))) {
             return null;
         }
 
@@ -82,7 +116,7 @@
                    FROM winery
                    WHERE region_id = :region_id';
 
-        $stmt = $dbh->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':region_id', $region_id);
         $stmt->execute();
 
@@ -91,9 +125,11 @@
         return (!empty($results) && $results) ? $results : null;
     }
 
-    function getWinesByWineryId($dbh, $winery_id) {
+    /*function getWinesByWineryId($winery_id) {
+        global $pdo;
+
         $sql = 'SELECT * FROM wine WHERE winery_id = :winery_id';
-        $stmt = $dbh->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':winery_id', $winery_id);
         $stmt->execute();
 
@@ -111,4 +147,4 @@
         }
 
         return (!empty($results)) ? $results : null;
-    }
+    }*/

@@ -1,30 +1,50 @@
 <?php
-    require_once('classes/MiniTemplator.php');
+require_once('vendor/autoload.php');
+include_once('config/config.php');
 
-    session_start();
 
-    function generateResultsTable($t) {
-        foreach ($_SESSION['search_results'] as $row) {
-            $t->setVariable('wine_name', $row['wine_name']);
-            $t->setVariable('year', $row['year']);
-            $t->setVariable('winery_name', $row['winery_name']);
-            $t->setVariable('region_name', $row['region_name']);
-            $t->setVariable('cost', $row['cost']);
-            $t->setVariable('on_hand', $row['on_hand']);
-            $t->setVariable('qty_sold', $row['qty_sold']);
-            $t->setVariable('revenue', $row['revenue']);
-            $t->addBlock('resultsRow');
-        }
-    }
+function buildResultsList() {
 
-    function generateResultsPage() {
-        $t = new MiniTemplator();
-        $t->readTemplateFromFile('templates/results.html');
+	if (array_key_exists('search_results', $_SESSION) 
+		&& isset($_SESSION['search_results']))
+	{
+	
+		// New array to store changes in
+		$search_results = array();
+	
+		// Iterate through results sent from answer.php
+		foreach ($_SESSION['search_results'] as $row) {
+	
+			// Split comma separated list of grape varieties
+			// into array. Needed to display them as an unordered list.
+			$row['grapes'] = explode(',', $row['grapes']);
+		
+			// Push modified row to new array
+			array_push($search_results, $row);
+		}
+	
+		return $search_results;
+	}
+	else {
+		return null;
+	}
+}
 
-        generateResultsTable($t);
+try {
+	$loader = new Twig_Loader_Filesystem('templates');
+	$twig = new Twig_Environment($loader);
+	
+	echo $twig->render('results.html', array(
+		'page_title' => 'Results',
+		'results' => buildResultsList(),
+	));
+} catch (Exception $e) {
+	echo $e->getMessage();
+}
 
-        $t->generateOutput();
-    }
+if (isset($_SESSION['search_errors'])) {
+    print_r($_SESSION['search_errors']);
+}
 
-    generateResultsPage();
-    #var_dump($_SESSION);
+
+?>
